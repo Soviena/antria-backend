@@ -1,0 +1,178 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @default(autoincrement()) @id
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model Post {
+  id        Int      @default(autoincrement()) @id
+  title     String
+  content   String?
+  published Boolean? @default(false)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+// ANTRIA
+model Pelanggan {
+  id              Int       @default(autoincrement()) @id
+  username        String    @unique
+  password        String
+  email           String    @unique
+  emailVerified   Boolean   @default(false)
+  profile_picture String
+  nama            String
+  handphone       String
+  alamat          String
+  review          Review[]
+  pesanan         Pesanan[]
+  chat            Chat[]
+  wallet          Int
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+}
+
+model Mitra {
+  id              Int         @default(autoincrement()) @id
+  nama_toko       String
+  alamat          String
+  hari_buka       String
+  jam_buka        String
+  jam_tutup       String
+  gambar_toko     String
+  review          Review[]
+  produk_layanan  Produk[]
+  order           Pesanan[]
+  karyawan        Karyawan[]
+  chat            Chat[]
+  created_at      DateTime    @default(now())
+  updated_at      DateTime    @updatedAt
+}
+
+model Produk {
+  id          Int       @default(autoincrement()) @id
+  nama_produk String
+  harga       Int
+  gambar      String
+  mitra       Mitra     @relation(fields: [mitraId], references: [id])
+  mitraId     Int
+  orderList   OrderList[]
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+}
+
+model OrderList {
+  id        Int @default(autoincrement()) @id
+  quantity  Int @default(1)
+  pesanan   Pesanan @relation(fields: [pesananId], references: [invoice])
+  produk    Produk @relation(fields: [produkId], references: [id])
+  produkId  Int
+  pesananId String
+}
+
+//  invoice format : INVC-GA1-RO2-131026032024
+model Pesanan {
+  invoice     String      @id  
+  payment     Payment
+  status      PaymentStatus
+  oderlist    OrderList[]
+  pelanggan   Pelanggan   @relation(fields: [pelangganId], references: [id])
+  pelangganId Int
+  mitra       Mitra       @relation(fields: [mitraId], references: [id])
+  mitraId     Int
+  antrian     Antrian?
+  antrianId   Int
+
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+}
+
+model Antrian {
+  id          Int         @default(autoincrement()) @id
+  estimasi    Int?
+  pesanan     Pesanan     @relation(fields: [pesananId], references: [invoice])
+  pesananId   String      @unique
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+}
+
+model Karyawan {
+  id              Int       @default(autoincrement()) @id
+  username        String    @unique
+  password        String
+  email           String    @unique
+  profile_picture String
+  nama            String
+  handphone       String
+  alamat          String
+  isOwner         Boolean   @default(false)
+  mitra           Mitra     @relation(fields: [mitraId], references: [id])
+  mitraId         Int
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+}
+
+model Review {
+  komentar    String
+  rating      Int
+  mitra       Mitra     @relation(fields: [mitraId], references: [id])
+  mitraId     Int
+  reviewer    Pelanggan @relation(fields: [pelangganId], references: [id])
+  pelangganId Int
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt  
+
+  @@id([mitraId,pelangganId])
+}
+
+model Chat {
+  id          Int       @default(autoincrement()) @id
+  message     String
+  attachment  String?
+  pelanggan   Pelanggan @relation(fields: [pelangganId], references: [id])
+  pelangganId Int
+  mitra       Mitra     @relation(fields: [mitraId], references: [id])
+  mitraId     Int
+  isRead      Boolean
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt  
+}
+
+enum Payment {
+  EWALLET
+  CASH
+}
+
+enum OrderStatus {
+  ALLDONE
+  CONFIRM
+  PROCESS
+  WAITING
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+
+
+
+
+
