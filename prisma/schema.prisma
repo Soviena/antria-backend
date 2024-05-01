@@ -35,14 +35,14 @@ model Pelanggan {
   password        String
   email           String    @unique
   emailVerified   Boolean   @default(false)
-  profile_picture String
+  profile_picture String    @default("")
   nama            String
-  handphone       String
-  alamat          String
+  handphone       String    @default("")
+  alamat          String    @default("")
   review          Review[]
   pesanan         Pesanan[]
   chat            Chat[]
-  wallet          Int
+  wallet          Int       @default(0)
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
 }
