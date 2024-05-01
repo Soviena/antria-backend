@@ -7,10 +7,11 @@ import { PrismaService } from './prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { PelangganModule } from './pelanggan/pelanggan.module';
+import { MitraModule } from './mitra/mitra.module';
 
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, PelangganModule],
+  imports: [ConfigModule.forRoot(), AuthModule, PelangganModule, MitraModule],
   controllers: [AppController],
   providers: [AppService, UserService, PostService, PrismaService],
 })

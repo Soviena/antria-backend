@@ -49,7 +49,8 @@ model Pelanggan {
 
 model Mitra {
   id              Int         @default(autoincrement()) @id
-  nama_toko       String
+  nama_toko       String      
+  deskripsi_toko  String      @default("")
   alamat          String
   hari_buka       String
   jam_buka        String
