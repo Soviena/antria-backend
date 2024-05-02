@@ -55,7 +55,7 @@ model Mitra {
   hari_buka       String
   jam_buka        String
   jam_tutup       String
-  gambar_toko     String
+  gambar_toko     String      @default("")
   review          Review[]
   produk_layanan  Produk[]
   order           Pesanan[]

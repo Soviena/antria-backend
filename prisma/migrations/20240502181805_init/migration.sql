@@ -1,0 +1,12 @@
+-- AlterTable
+ALTER TABLE `Mitra` ADD COLUMN `deskripsi_toko` VARCHAR(191) NOT NULL DEFAULT '',
+    MODIFY `gambar_toko` VARCHAR(191) NOT NULL DEFAULT '';
+
+-- AlterTable
+ALTER TABLE `OrderList` ADD COLUMN `quantity` INTEGER NOT NULL DEFAULT 1;
+
+-- AlterTable
+ALTER TABLE `Pelanggan` MODIFY `profile_picture` VARCHAR(191) NOT NULL DEFAULT '',
+    MODIFY `handphone` VARCHAR(191) NOT NULL DEFAULT '',
+    MODIFY `alamat` VARCHAR(191) NOT NULL DEFAULT '',
+    MODIFY `wallet` INTEGER NOT NULL DEFAULT 0;
