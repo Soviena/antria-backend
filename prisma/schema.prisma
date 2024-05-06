@@ -137,10 +137,10 @@ model Karyawan {
   username        String    @unique
   password        String
   email           String    @unique
-  profile_picture String
+  profile_picture String    @default("")
   nama            String
-  handphone       String
-  alamat          String
+  handphone       String    @default("")
+  alamat          String    @default("")
   isOwner         Boolean   @default(false)
   mitra           Mitra     @relation(fields: [mitraId], references: [id])
   mitraId         Int
