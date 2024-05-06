@@ -49,13 +49,16 @@ model Pelanggan {
 
 model Mitra {
   id              Int         @default(autoincrement()) @id
+  // sektor          Sektor[]    
+  // kategori        Kategori[]  
   nama_toko       String      
-  deskripsi_toko  String      @default("")
+  deskripsi_toko  String
   alamat          String
-  hari_buka       String
+  hari_buka       String      
   jam_buka        String
   jam_tutup       String
   gambar_toko     String      @default("")
+  // verified        Boolean     @default(false)
   review          Review[]
   produk_layanan  Produk[]
   order           Pesanan[]
@@ -65,21 +68,32 @@ model Mitra {
   updated_at      DateTime    @updatedAt
 }
 
+// model Sektor {
+//   id              Int     @default(autoincrement()) @id
+//   nama_sektor     String  
+// }
+
+// model Kategori {
+
+// }
+
 model Produk {
-  id          Int       @default(autoincrement()) @id
-  nama_produk String
-  harga       Int
-  gambar      String
-  mitra       Mitra     @relation(fields: [mitraId], references: [id])
-  mitraId     Int
-  orderList   OrderList[]
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
+  id                Int       @default(autoincrement()) @id
+  nama_produk       String
+  deskripsi_produk  String 
+  harga             Int       
+  gambar            String    @default("default.png")
+  mitra             Mitra     @relation(fields: [mitraId], references: [id])
+  mitraId           Int
+  orderList         OrderList[]
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
 }
 
 model OrderList {
   id        Int @default(autoincrement()) @id
   quantity  Int @default(1)
+  note      String @default("")
   pesanan   Pesanan @relation(fields: [pesananId], references: [invoice])
   produk    Produk @relation(fields: [produkId], references: [id])
   produkId  Int
