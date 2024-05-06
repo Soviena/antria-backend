@@ -9,9 +9,9 @@ export class AuthController {
     constructor(private authService: AuthService) {}
 
     @HttpCode(HttpStatus.OK)
-    @Post('login')
-    async signIn(@Body() signInDto: Record<string, any>) {
-        return this.authService.signIn(signInDto.username, signInDto.password);
+    @Post('login/pelanggan')
+    async signInPelanggan(@Body() signInDto: Record<string, any>) {
+        return this.authService.signInPelanggan(signInDto.username, signInDto.password);
     }
 
     @UseGuards(AuthGuard)
