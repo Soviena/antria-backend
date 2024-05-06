@@ -101,6 +101,12 @@ model OrderList {
 }
 
 //  invoice format : INVC-GA1-RO2-131026032024
+// INVC-GA-1-RO2-131026032024
+// 2 huruf awal toko + id
+// 2 huruf awal pelanggan + id
+// jam menit tanggal bulan tahun
+// INVCGA1RO2131026032024
+
 model Pesanan {
   invoice     String      @id  
   payment     Payment
