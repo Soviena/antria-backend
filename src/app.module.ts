@@ -10,10 +10,11 @@ import { PelangganModule } from './pelanggan/pelanggan.module';
 import { MitraModule } from './mitra/mitra.module';
 import { ProdukModule } from './produk/produk.module';
 import { KaryawanModule } from './karyawan/karyawan.module';
+import { PesananModule } from './pesanan/pesanan.module';
 
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, PelangganModule, MitraModule, ProdukModule, KaryawanModule],
+  imports: [ConfigModule.forRoot(), AuthModule, PelangganModule, MitraModule, ProdukModule, KaryawanModule, PesananModule],
   controllers: [AppController],
   providers: [AppService, UserService, PostService, PrismaService],
 })
