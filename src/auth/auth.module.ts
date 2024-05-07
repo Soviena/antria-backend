@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { PelangganModule } from 'src/pelanggan/pelanggan.module';
 import { jwtConstants } from './constants';
 import { JwtModule } from '@nestjs/jwt';
+import { KaryawanModule } from 'src/karyawan/karyawan.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { JwtModule } from '@nestjs/jwt';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '1d' },
     }),
+    KaryawanModule
   ],
   controllers: [AuthController],
   providers: [AuthService],
