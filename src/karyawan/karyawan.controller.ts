@@ -1,6 +1,8 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { KaryawanService } from './karyawan.service';
 import { Karyawan } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
+
 
 @Controller('karyawan')
 export class KaryawanController {
@@ -18,7 +20,9 @@ export class KaryawanController {
 
   @Post()
   async create(@Body() data: any): Promise<Karyawan> {
-    return this.karyawanService.createKaryawan(data);
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    const karyawanData = { ...data, password: hashedPassword };
+    return this.karyawanService.createKaryawan(karyawanData);
   }
 
   @Put(':id')
@@ -33,4 +37,10 @@ export class KaryawanController {
   async remove(@Param('id') id: string): Promise<Karyawan> {
     return this.karyawanService.deleteKaryawan({ id: parseInt(id) });
   }
+
+  @Get('mitra/:mitraId')
+  async findByMitra(@Param('mitraId') mitraId: string): Promise<Karyawan[]> {
+    return this.karyawanService.karyawansByMitraId(parseInt(mitraId, 10));
+  }
+
 }

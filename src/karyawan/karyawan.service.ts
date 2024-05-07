@@ -73,4 +73,12 @@ export class KaryawanService {
       where,
     });
   }
+
+  async karyawansByMitraId(mitraId: number): Promise<Karyawan[]> {
+    return this.prisma.karyawan.findMany({
+      where: {
+        mitraId: mitraId,
+      },
+    });
+  }
 }
