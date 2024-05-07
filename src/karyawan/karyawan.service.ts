@@ -81,4 +81,13 @@ export class KaryawanService {
       },
     });
   }
+
+  async findOne(username: string): Promise<Karyawan> {
+    const karyawan = await this.karyawan({ username });
+    if (!karyawan) {
+      throw new NotFoundException(`Karyawan with Username ${username} not found.`);
+    }
+    return karyawan;
+  }
+
 }

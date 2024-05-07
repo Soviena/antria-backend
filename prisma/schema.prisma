@@ -83,6 +83,7 @@ model Produk {
   deskripsi_produk  String 
   harga             Int       
   gambar            String    @default("default.png")
+  kuantitas         Int       @default(10)
   mitra             Mitra     @relation(fields: [mitraId], references: [id])
   mitraId           Int
   orderList         OrderList[]
@@ -122,6 +123,10 @@ model Pesanan {
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
 }
+
+// user input order list -> isi informasi pesanan -> pesan
+
+// insert tabel pesanan -> bind orderlist to pesanan and mitra -> assign antrian
 
 model Antrian {
   id          Int         @default(autoincrement()) @id

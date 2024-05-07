@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE `Karyawan` MODIFY `profile_picture` VARCHAR(191) NOT NULL DEFAULT '',
+    MODIFY `handphone` VARCHAR(191) NOT NULL DEFAULT '',
+    MODIFY `alamat` VARCHAR(191) NOT NULL DEFAULT '';
+
+-- AlterTable
+ALTER TABLE `Produk` ADD COLUMN `kuantitas` INTEGER NOT NULL DEFAULT 10;

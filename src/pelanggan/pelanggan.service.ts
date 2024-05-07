@@ -59,7 +59,7 @@ export class PelangganService {
   async findOne(username: string): Promise<Pelanggan> {
     const pelanggan = await this.pelanggan({ username });
     if (!pelanggan) {
-      throw new NotFoundException(`Pelanggan with ID ${username} not found.`);
+      throw new NotFoundException(`Pelanggan with username ${username} not found.`);
     }
     return pelanggan;
   }

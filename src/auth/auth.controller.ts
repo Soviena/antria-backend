@@ -14,6 +14,12 @@ export class AuthController {
         return this.authService.signInPelanggan(signInDto.username, signInDto.password);
     }
 
+    @HttpCode(HttpStatus.OK)
+    @Post('login/mitra')
+    async signInMitra(@Body() signInDto: Record<string, any>) {
+        return this.authService.signInMitra(signInDto.username, signInDto.password);
+    }
+
     @UseGuards(AuthGuard)
     @Get('profile')
     getProfile(@Request() req) {

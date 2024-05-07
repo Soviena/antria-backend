@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PelangganService } from '../pelanggan/pelanggan.service';
+import { KaryawanService } from 'src/karyawan/karyawan.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
@@ -7,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
     constructor(
       private pelangganService: PelangganService,
+      private karyawanService: KaryawanService,
       private jwtService: JwtService
     ) {}
 
@@ -16,6 +18,17 @@ export class AuthService {
         throw new UnauthorizedException();
       }
       const payload = { sub: user.id, username: user.username, role:"pelanggan" };
+      return {
+        access_token: await this.jwtService.signAsync(payload),
+      };
+    }
+
+    async signInMitra(username: string, pass: string): Promise<any> {
+      const user = await this.karyawanService.findOne(username);
+      if (!bcrypt.compare(user?.password, pass)) {
+        throw new UnauthorizedException();
+      }
+      const payload = { sub: user.id, username: user.username, role:"karyawan" };
       return {
         access_token: await this.jwtService.signAsync(payload),
       };
