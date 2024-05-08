@@ -111,6 +111,7 @@ model OrderList {
 model Pesanan {
   invoice     String      @id  
   payment     Payment
+  pemesanan   OrderType?
   status      PaymentStatus
   oderlist    OrderList[]
   pelanggan   Pelanggan   @relation(fields: [pelangganId], references: [id])
@@ -118,8 +119,6 @@ model Pesanan {
   mitra       Mitra       @relation(fields: [mitraId], references: [id])
   mitraId     Int
   antrian     Antrian?
-  antrianId   Int
-
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
 }
@@ -197,7 +196,10 @@ enum PaymentStatus {
   FAILED
 }
 
-
+enum OrderType {
+  ONLINE
+  OFFLINE
+}
 
 
 
