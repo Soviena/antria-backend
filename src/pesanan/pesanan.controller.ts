@@ -29,6 +29,36 @@ export class PesananController {
     });
   }
 
+  @Put(':invoice/success')
+  async setSuccess(@Param('invoice') invoice: string): Promise<Pesanan> {
+    return this.pesananService.updatePesanan({
+      where: { invoice },
+      data: {
+        status:"SUCCESS"
+      }
+    });
+  }
+
+  @Put(':invoice/failed')
+  async setFailed(@Param('invoice') invoice: string): Promise<Pesanan> {
+    return this.pesananService.updatePesanan({
+      where: { invoice },
+      data: {
+        status:"FAILED"
+      }
+    });
+  }
+
+  @Put(':invoice/pending')
+  async setPending(@Param('invoice') invoice: string): Promise<Pesanan> {
+    return this.pesananService.updatePesanan({
+      where: { invoice },
+      data: {
+        status:"PENDING"
+      }
+    });
+  }
+
   @Delete(':invoice')
   async remove(@Param('invoice') invoice: string): Promise<Pesanan> {
     return this.pesananService.deletePesanan({ invoice });

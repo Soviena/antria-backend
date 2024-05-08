@@ -17,7 +17,13 @@ export class AuthService {
       if (!bcrypt.compare(user?.password, pass)) {
         throw new UnauthorizedException();
       }
-      const payload = { sub: user.id, username: user.username, role:"pelanggan" };
+      const payload = { 
+        sub: user.id, 
+        username: user.username, 
+        role:"pelanggan", 
+        picture: user.profile_picture, 
+        email:user.email 
+      };
       return {
         access_token: await this.jwtService.signAsync(payload),
       };
@@ -28,7 +34,14 @@ export class AuthService {
       if (!bcrypt.compare(user?.password, pass)) {
         throw new UnauthorizedException();
       }
-      const payload = { sub: user.id, username: user.username, role:"karyawan", mitraId: user.mitraId };
+      const payload = { 
+        sub: user.id, 
+        username: user.username, 
+        role:"karyawan", 
+        mitraId: user.mitraId, 
+        picture: user.profile_picture, 
+        email:user.email 
+      };
       return {
         access_token: await this.jwtService.signAsync(payload),
       };
