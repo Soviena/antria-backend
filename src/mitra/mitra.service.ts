@@ -53,4 +53,18 @@ export class MitraService {
       where,
     });
   }
+
+  async createMitraWithOwner(data: any): Promise<any> { 
+    const { mitraData, karyawanData} = data;
+    const mitra = await this.createMitra(mitraData);
+    const karyawan = await this.prisma.karyawan.create({
+      data: {
+        ...karyawanData,
+        mitra: {
+          connect: { id: mitra.id }
+        }
+      }
+    });
+    return {mitra, karyawan};
+  }
 }

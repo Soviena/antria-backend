@@ -1,10 +1,13 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { MitraService } from './mitra.service';
 import { Mitra } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
+
 
 @Controller('mitra')
 export class MitraController {
   constructor(private mitraService: MitraService) {}
+
 
   @Get()
   async findAll(): Promise<Mitra[]> {
@@ -21,6 +24,14 @@ export class MitraController {
     return this.mitraService.createMitra(data);
   }
 
+  @Post('new')
+  async createWithOwner(@Body() data:any): Promise<any>{
+    let { mitraData, karyawanData} = data;
+    const hashedPassword = await bcrypt.hash(karyawanData.password, 10);
+    karyawanData = { ...karyawanData, password: hashedPassword };
+    return this.mitraService.createMitraWithOwner({mitraData, karyawanData});
+  }
+  
   @Put(':id')
   async update(@Param('id') id: string, @Body() data: Mitra): Promise<Mitra> {
     return this.mitraService.updateMitra({
