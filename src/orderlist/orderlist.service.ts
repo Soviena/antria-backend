@@ -23,6 +23,14 @@ export class OrderlistService {
     });
   }
 
+  async getOrderListByInvoice(invoice: string): Promise<OrderList[] | null> {
+    return this.prisma.orderList.findMany({
+      where: {
+        pesananId:invoice,
+      },
+    });
+  }
+
   async updateOrderList(params: {
     where: Prisma.OrderListWhereUniqueInput;
     data: Prisma.OrderListUpdateInput;

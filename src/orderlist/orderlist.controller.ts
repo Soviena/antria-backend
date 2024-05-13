@@ -27,6 +27,11 @@ export class OrderlistController {
     return this.orderListService.getOrderListById(Number(id));
   }
 
+  @Get('invoice/:invoice')
+  async getAllOrderFromInvoice(@Param('invoice') invoice: string): Promise<OrderList[] | null> {
+    return this.orderListService.getOrderListByInvoice(invoice);
+  }
+
   @Put(':id')
   async update(@Param('id') id: string, @Body() data: Prisma.OrderListUpdateInput): Promise<OrderList> {
     return this.orderListService.updateOrderList({
