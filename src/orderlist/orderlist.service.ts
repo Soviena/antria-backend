@@ -51,7 +51,7 @@ export class OrderlistService {
       where: {id : order ? order.id : -1},
       create: params.data,
       update: {
-        quantity: order ? +order.quantity + +params.data.quantity : params.data.quantity,
+        quantity: params.data.quantity,
         note: params.data.note
       }
     });
