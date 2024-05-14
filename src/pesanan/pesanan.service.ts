@@ -89,4 +89,15 @@ export class PesananService {
       where,
     });
   }
+
+  async pesanansByMitraId(mitraId: number): Promise<Pesanan[]> {
+    return this.prisma.pesanan.findMany({
+      where: {
+        mitraId: mitraId,
+      },
+      include: { oderlist: {
+        include: {produk: true}
+      }}
+    });
+  }
 }
