@@ -2,7 +2,7 @@
 /dist
 /node_modules
 /build
-
+/MediaUpload/*
 # Logs
 logs
 *.log

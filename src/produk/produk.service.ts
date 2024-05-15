@@ -31,27 +31,28 @@ export class ProdukService {
     });
   }
 
-  async createProduk(data: Prisma.ProdukCreateInput): Promise<Produk> {
-    const { mitra, ...produkData } = data;
+  async createProduk(data: any): Promise<Produk> {
+    const { mitraId, harga, ...produkData } = data;
     
     // Check if mitraId is provided
-    if (!mitra || !mitra.connect || !mitra.connect.id) {
+    if (!mitraId) {
       throw new Error('Mitra ID is required.');
     }
 
     // Check if the mitra exists
     const existingMitra = await this.prisma.mitra.findUnique({
-      where: { id: mitra.connect.id }
+      where: { id: parseInt(mitraId) }
     });
     if (!existingMitra) {
-      throw new NotFoundException(`Mitra with ID ${mitra.connect.id} not found.`);
+      throw new NotFoundException(`Mitra with ID ${mitraId} not found.`);
     }
 
     return this.prisma.produk.create({
       data: {
+        harga:parseInt(harga),
         ...produkData,
         mitra: {
-          connect: { id: mitra.connect.id }
+          connect: { id: parseInt(mitraId) }
         }
       },
     });
