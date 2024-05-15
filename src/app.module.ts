@@ -10,9 +10,10 @@ import { PesananModule } from './pesanan/pesanan.module';
 import { OrderlistModule } from './orderlist/orderlist.module';
 import { AntrianModule } from './antrian/antrian.module';
 import { ReviewModule } from './review/review.module';
+import { ImageModule } from './image/image.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, PelangganModule, MitraModule, ProdukModule, KaryawanModule, PesananModule, OrderlistModule, AntrianModule, ReviewModule],
+  imports: [ConfigModule.forRoot(), AuthModule, PelangganModule, MitraModule, ProdukModule, KaryawanModule, PesananModule, OrderlistModule, AntrianModule, ReviewModule, ImageModule],
   controllers: [],
   providers: [PrismaService],
 })

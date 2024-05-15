@@ -95,9 +95,12 @@ export class PesananService {
       where: {
         mitraId: mitraId,
       },
-      include: { oderlist: {
-        include: {produk: true}
-      }}
+      include: { 
+        oderlist: {
+          include: {produk: true}
+        },
+        pelanggan: true
+      }
     });
   }
 }
