@@ -1,8 +1,11 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { AntrianService } from './antrian.service';
 import { Antrian, Prisma } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('antrian')
+@ApiTags('antrian')
+
 export class AntrianController {
   constructor(private antrianService: AntrianService) {}
 

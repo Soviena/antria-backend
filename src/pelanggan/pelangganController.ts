@@ -1,9 +1,12 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { PelangganService } from './pelanggan.service';
 import { Pelanggan } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
+import { CreatePelangganDto } from './dto/createPelanggan.dto';
 import * as bcrypt from 'bcrypt';
 
 @Controller('pelanggan')
+@ApiTags('pelanggan')
 export class PelangganController {
   constructor(private pelangganService: PelangganService) {}
 
@@ -18,7 +21,7 @@ export class PelangganController {
   }
 
   @Post()
-  async create(@Body() data: Pelanggan): Promise<Pelanggan> {
+  async create(@Body() data: CreatePelangganDto): Promise<Pelanggan> {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const pelangganData = { ...data, password: hashedPassword };
     return this.pelangganService.createPelanggan(pelangganData);

@@ -2,9 +2,12 @@ import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common'
 import { MitraService } from './mitra.service';
 import { Mitra } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { ApiTags } from '@nestjs/swagger';
 
 
 @Controller('mitra')
+@ApiTags('mitra')
+
 export class MitraController {
   constructor(private mitraService: MitraService) {}
 

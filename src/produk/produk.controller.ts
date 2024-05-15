@@ -1,8 +1,11 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { ProdukService } from './produk.service';
 import { Produk } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('produk')
+@ApiTags('produk')
+
 export class ProdukController {
   constructor(private produkService: ProdukService) {}
 

@@ -1,8 +1,11 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { PesananService } from './pesanan.service';
 import { Pesanan } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('pesanan')
+@ApiTags('pesanan')
+
 export class PesananController {
   constructor(private pesananService: PesananService) {}
 

@@ -2,9 +2,12 @@ import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common'
 import { KaryawanService } from './karyawan.service';
 import { Karyawan } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { ApiTags } from '@nestjs/swagger';
 
 
 @Controller('karyawan')
+@ApiTags('karyawan')
+
 export class KaryawanController {
   constructor(private karyawanService: KaryawanService) {}
 

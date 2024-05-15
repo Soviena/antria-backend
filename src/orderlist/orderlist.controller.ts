@@ -2,8 +2,11 @@ import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common'
 
 import { OrderList, Prisma } from '@prisma/client';
 import { OrderlistService } from './orderlist.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('orderlist')
+@ApiTags('orderlist')
+
 export class OrderlistController {
   constructor(private orderListService: OrderlistService) {}
 

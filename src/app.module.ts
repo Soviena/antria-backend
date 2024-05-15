@@ -1,8 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UserService } from './models/user.service';
-import { PostService } from './models/post.service';
 import { PrismaService } from './prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
@@ -15,10 +11,9 @@ import { OrderlistModule } from './orderlist/orderlist.module';
 import { AntrianModule } from './antrian/antrian.module';
 import { ReviewModule } from './review/review.module';
 
-
 @Module({
   imports: [ConfigModule.forRoot(), AuthModule, PelangganModule, MitraModule, ProdukModule, KaryawanModule, PesananModule, OrderlistModule, AntrianModule, ReviewModule],
-  controllers: [AppController],
-  providers: [AppService, UserService, PostService, PrismaService],
+  controllers: [],
+  providers: [PrismaService],
 })
 export class AppModule {}

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PelangganController } from './app.pelangganController';
+import { PelangganController } from './pelangganController';
 import { PelangganService } from './pelanggan.service';
 import { PrismaService } from 'src/prisma.service';
 
