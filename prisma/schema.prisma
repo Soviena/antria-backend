@@ -130,6 +130,7 @@ model Pesanan {
 model Antrian {
   id          Int         @default(autoincrement()) @id
   estimasi    Int?
+  orderstatus OrderStatus @default(WAITING)
   pesanan     Pesanan     @relation(fields: [pesananId], references: [invoice])
   pesananId   String      @unique
   created_at  DateTime    @default(now())

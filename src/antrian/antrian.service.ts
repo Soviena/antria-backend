@@ -6,8 +6,12 @@ import { Antrian, Prisma } from '@prisma/client';
 export class AntrianService {
   constructor(private prisma: PrismaService) {}
 
-  async createAntrian(data: Prisma.AntrianCreateInput): Promise<Antrian> {
-    return this.prisma.antrian.create({ data });
+  async createAntrian(data: any): Promise<Antrian> {
+    const {pesananInvoice, estimasi} = data;
+    return this.prisma.antrian.create({ data:{
+      estimasi:estimasi,
+      pesananId:pesananInvoice
+    }});
   }
 
   async findAntrianById(id: number): Promise<Antrian | null> {
@@ -25,4 +29,15 @@ export class AntrianService {
   async deleteAntrian(where: Prisma.AntrianWhereUniqueInput): Promise<Antrian> {
     return this.prisma.antrian.delete({ where });
   }
+
+  async findAntriansByMitraId(mitraId: number): Promise<Antrian[]> {
+    return this.prisma.antrian.findMany({
+      where: {
+        pesanan: {
+          mitraId: mitraId
+        },
+      },
+    });
+  }
+
 }

@@ -19,6 +19,11 @@ export class AntrianController {
     return this.antrianService.findAntrianById(Number(id));
   }
 
+  @Get('mitra/:id')
+  async findAntriansByMitraId(@Param('id') mitraId: string): Promise<Antrian[] | null> {
+    return this.antrianService.findAntriansByMitraId(Number(mitraId));
+  }
+
   @Put(':id')
   async update(@Param('id') id: string, @Body() data: Prisma.AntrianUpdateInput): Promise<Antrian> {
     return this.antrianService.updateAntrian({
