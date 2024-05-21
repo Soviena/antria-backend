@@ -60,8 +60,8 @@ export class ProdukController {
       }
     })
   }))
-  async update(@Param('id') id: string, @Body() data: Produk, @UploadedFile() file: Express.Multer.File): Promise<Produk> {
-    let { gambar } = data;
+  async update(@Param('id') id: string, @Body() data: any, @UploadedFile() file: Express.Multer.File): Promise<Produk> {
+    let { gambar,harga,...produks } = data;
     if (file != null) {
       // if (gambar !== "") {
       //   const filePath = __dirname+'../../MediaUpload/'+gambar;
@@ -82,11 +82,14 @@ export class ProdukController {
       // }
       gambar = file.filename;
     }
+    harga = parseInt(harga) as number
+    console.log(harga)
     return this.produkService.updateProduk({
       where: { id: parseInt(id) },
       data:{
         gambar,
-        ...data
+        harga,
+        ...produks
       },
     });
   }

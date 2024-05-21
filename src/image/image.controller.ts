@@ -4,12 +4,17 @@ import {
     Header,
     Param,
     Post,
+    Res,
     StreamableFile,
     UploadedFile,
     UseInterceptors,
   } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { ImageService } from './image.service';
+import * as path from 'path';
+import * as fs from 'fs';
+
+
   
   @Controller('image')
   export class ImageController {
@@ -17,8 +22,13 @@ import { ImageService } from './image.service';
 
     @Get(':filename')
     @Header('Content-Type', 'image')
-    getImage(@Param('filename') filename: string): StreamableFile {
+    async getImage(@Param('filename') filename: string): Promise<StreamableFile> {
       const file = this.imgageService.getImage(filename);
-      return new StreamableFile(createReadStream(file));
+      try {
+        await fs.promises.access(file, fs.constants.F_OK); 
+        return new StreamableFile(createReadStream(file));
+      } catch (err) {        
+        return;
+      }
     }
   }

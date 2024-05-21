@@ -11,7 +11,15 @@ export class PesananService {
   ): Promise<Pesanan | null> {
     return this.prisma.pesanan.findUnique({
       where: pesananWhereUniqueInput,
+      include:{
+        pelanggan: true,
+        antrian: true,
+        oderlist: {
+          include: {produk: true}
+        },
+      }
     });
+
   }
 
   async pesanans(params: {
@@ -99,7 +107,8 @@ export class PesananService {
         oderlist: {
           include: {produk: true}
         },
-        pelanggan: true
+        pelanggan: true,
+        antrian: true
       }
     });
   }

@@ -119,6 +119,7 @@ model Pesanan {
   mitra       Mitra       @relation(fields: [mitraId], references: [id])
   mitraId     Int
   antrian     Antrian?
+  antrianId   Int?
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
 }
