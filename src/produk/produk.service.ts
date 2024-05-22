@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Produk, Prisma } from '@prisma/client';
 
@@ -36,7 +36,7 @@ export class ProdukService {
     
     // Check if mitraId is provided
     if (!mitraId) {
-      throw new Error('Mitra ID is required.');
+      throw new BadRequestException(`Invalid id:${mitraId} provided`); 
     }
 
     // Check if the mitra exists
@@ -59,17 +59,29 @@ export class ProdukService {
   }
 
   async updateProduk(params: {
-    where: Prisma.ProdukWhereUniqueInput;
+    id: number;
     data: Prisma.ProdukUpdateInput;
   }): Promise<Produk> {
-    const { where, data } = params;
+    const { id, data } = params;
+    if (!id) throw new BadRequestException(`Invalid id:${id} provided`);      
+    const produkExist = await this.prisma.produk.findUnique({
+      where: { id: id }
+    });
+    if (!produkExist) throw new NotFoundException(`Produk with ID ${id} not found.`);      
     return this.prisma.produk.update({
       data,
-      where,
+      where:{
+        id: id
+      },
     });
   }
 
   async deleteProduk(where: Prisma.ProdukWhereUniqueInput): Promise<Produk> {
+    if (!where.id) throw new BadRequestException(`Invalid id:${where.id} provided`);      
+    const produkExist = await this.prisma.produk.findUnique({
+      where
+    });
+    if (!produkExist) throw new NotFoundException(`Produk with ID ${where.id} not found.`);  
     return this.prisma.produk.delete({
       where,
     });

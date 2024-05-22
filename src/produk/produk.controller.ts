@@ -83,9 +83,8 @@ export class ProdukController {
       gambar = file.filename;
     }
     harga = parseInt(harga) as number
-    console.log(harga)
     return this.produkService.updateProduk({
-      where: { id: parseInt(id) },
+      id: parseInt(id),
       data:{
         gambar,
         harga,
