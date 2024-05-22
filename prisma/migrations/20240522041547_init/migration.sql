@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Pesanan` MODIFY `pemesanan` ENUM('ONLINE', 'OFFLINE') NULL DEFAULT 'ONLINE';

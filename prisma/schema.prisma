@@ -111,7 +111,8 @@ model OrderList {
 model Pesanan {
   invoice     String      @id  
   payment     Payment
-  pemesanan   OrderType?
+  pemesanan   OrderType?  @default(ONLINE)
+  takeaway    Boolean     @default(false)
   status      PaymentStatus
   oderlist    OrderList[]
   pelanggan   Pelanggan   @relation(fields: [pelangganId], references: [id])
