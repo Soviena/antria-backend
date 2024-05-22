@@ -34,6 +34,11 @@ export class PesananController {
     return this.pesananService.createPesanan(data);
   }
 
+  @Post('withOrderList')
+  async createWithOrderList(@Body() data: any): Promise<Pesanan> {
+    return this.pesananService.createPesananWithOrderList(data);
+  }
+
   @Put(':invoice')
   async update(@Param('invoice') invoice: string, @Body() data: Pesanan): Promise<Pesanan> {
     return this.pesananService.updatePesanan({

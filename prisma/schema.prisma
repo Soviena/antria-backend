@@ -109,20 +109,20 @@ model OrderList {
 // INVCGA1RO2131026032024
 
 model Pesanan {
-  invoice     String      @id  
+  invoice     String        @id  
   payment     Payment
-  pemesanan   OrderType?  @default(ONLINE)
-  takeaway    Boolean     @default(false)
-  status      PaymentStatus
+  pemesanan   OrderType?    @default(ONLINE)
+  takeaway    Boolean       @default(false)
+  status      PaymentStatus @default(PENDING)
   oderlist    OrderList[]
-  pelanggan   Pelanggan   @relation(fields: [pelangganId], references: [id])
+  pelanggan   Pelanggan     @relation(fields: [pelangganId], references: [id])
   pelangganId Int
-  mitra       Mitra       @relation(fields: [mitraId], references: [id])
+  mitra       Mitra         @relation(fields: [mitraId], references: [id])
   mitraId     Int
   antrian     Antrian?
   antrianId   Int?
-  created_at  DateTime    @default(now())
-  updated_at  DateTime    @updatedAt
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
 }
 
 // user input order list -> isi informasi pesanan -> pesan

@@ -3,9 +3,10 @@ import { PesananService } from './pesanan.service';
 import { PesananController } from './pesanan.controller';
 import { PrismaService } from 'src/prisma.service';
 import { AntrianService } from 'src/antrian/antrian.service';
+import { OrderlistService } from 'src/orderlist/orderlist.service';
 
 @Module({
-  providers: [PesananService,PrismaService,AntrianService],
+  providers: [PesananService,PrismaService,AntrianService, OrderlistService],
   controllers: [PesananController],
   exports: [PesananService]
 })
