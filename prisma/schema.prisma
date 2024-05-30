@@ -13,21 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @default(autoincrement()) @id
-  email String  @unique
-  name  String?
-  posts Post[]
-}
-
-model Post {
-  id        Int      @default(autoincrement()) @id
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
-}
 // ANTRIA
 model Pelanggan {
   id              Int       @default(autoincrement()) @id
@@ -54,16 +39,19 @@ model Mitra {
   nama_toko       String      
   deskripsi_toko  String
   alamat          String
+  // linkGmaps       String 
   hari_buka       String      
   jam_buka        String
   jam_tutup       String
   gambar_toko     String      @default("")
   // verified        Boolean     @default(false)
+  subscription    Boolean     @default(false)
   review          Review[]
   produk_layanan  Produk[]
   order           Pesanan[]
   karyawan        Karyawan[]
   chat            Chat[]
+  status_toko     StatusToko  @default(OPEN)
   created_at      DateTime    @default(now())
   updated_at      DateTime    @updatedAt
 }
@@ -191,6 +179,7 @@ enum OrderStatus {
   CONFIRM
   PROCESS
   WAITING
+  CANCELED
 }
 
 enum PaymentStatus {
@@ -202,6 +191,12 @@ enum PaymentStatus {
 enum OrderType {
   ONLINE
   OFFLINE
+}
+
+enum StatusToko {
+  OPEN
+  CLOSE
+  FULL
 }
 
 

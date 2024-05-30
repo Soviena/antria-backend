@@ -71,7 +71,10 @@ export class ReviewService {
   async getAllReviewsFromMitra(mitraId:number): Promise<Review[]> {
     return this.prisma.review.findMany({
         where:{
-            mitraId:mitraId
+            mitraId:mitraId            
+        },
+        include:{
+          reviewer: true 
         }
     });
   }

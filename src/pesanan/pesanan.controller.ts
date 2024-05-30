@@ -29,6 +29,12 @@ export class PesananController {
     return this.pesananService.pesanansByMitraId(parseInt(mitraId,10));
   }
 
+  @Get('mitra/:mitraId/success')
+  async findByMitraIfSuccess(@Param('mitraId') mitraId: string): Promise<Pesanan[]> {
+    return this.pesananService.pesanansByMitraIdSuccess(parseInt(mitraId,10));
+  }
+
+
   @Post()
   async create(@Body() data: any): Promise<Pesanan> {
     return this.pesananService.createPesanan(data);

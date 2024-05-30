@@ -61,7 +61,7 @@ export class ProdukController {
     })
   }))
   async update(@Param('id') id: string, @Body() data: any, @UploadedFile() file: Express.Multer.File): Promise<Produk> {
-    let { gambar,harga,...produks } = data;
+    let { gambar,...produks } = data;
     if (file != null) {
       // if (gambar !== "") {
       //   const filePath = __dirname+'../../MediaUpload/'+gambar;
@@ -82,12 +82,11 @@ export class ProdukController {
       // }
       gambar = file.filename;
     }
-    harga = parseInt(harga) as number
+    //harga = parseInt(harga) as number
     return this.produkService.updateProduk({
       id: parseInt(id),
       data:{
         gambar,
-        harga,
         ...produks
       },
     });

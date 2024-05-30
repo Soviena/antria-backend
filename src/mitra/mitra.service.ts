@@ -9,9 +9,27 @@ export class MitraService {
   async mitra(
     mitraWhereUniqueInput: Prisma.MitraWhereUniqueInput,
   ): Promise<Mitra | null> {
-    return this.prisma.mitra.findUnique({
+    let mitra = await this.prisma.mitra.findUnique({
       where: mitraWhereUniqueInput,
+      include: {
+        review: true,
+      }
     });
+
+    const { review, ...dataMitra } = mitra;
+    let totalReview = 0;
+    for (let index = 0; index < review.length; index++) {
+      const element = review[index];
+      totalReview += element.rating
+    }
+    const reviewAverage = Math.ceil(totalReview/review.length)
+    let mitraWithReview = {
+      review: reviewAverage,
+      ...dataMitra
+    }
+
+    return mitraWithReview
+
   }
 
   async mitras(params: {
@@ -22,13 +40,33 @@ export class MitraService {
     orderBy?: Prisma.MitraOrderByWithRelationInput;
   }): Promise<Mitra[]> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.mitra.findMany({
+    let listmitra = await this.prisma.mitra.findMany({
       skip,
       take,
       cursor,
       where,
       orderBy,
+      include: {
+        review: true
+      }
     });
+    let listMitraWithReview = [];
+    for (let index = 0; index < listmitra.length; index++){ 
+      const { review, ...dataMitra } = listmitra[index];
+      let totalReview = 0;
+      for (let index = 0; index < review.length; index++) {
+        const element = review[index];
+        totalReview += element.rating
+      }
+      const reviewAverage = Math.ceil(totalReview/review.length)
+      let dataMitraWithReview = {
+        review: reviewAverage,
+        ...dataMitra
+      }
+      listMitraWithReview.push(dataMitraWithReview)
+    }
+
+    return listMitraWithReview
   }
 
   async createMitra(data: Prisma.MitraCreateInput): Promise<Mitra> {

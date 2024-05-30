@@ -156,4 +156,20 @@ export class PesananService {
       }
     });
   }
+
+  async pesanansByMitraIdSuccess(mitraId: number): Promise<Pesanan[]> {
+    return this.prisma.pesanan.findMany({
+      where: {
+        mitraId: mitraId,
+        status:"SUCCESS"
+      },
+      include: { 
+        oderlist: {
+          include: {produk: true}
+        },
+        pelanggan: true,
+        antrian: true
+      }
+    });
+  }
 }
