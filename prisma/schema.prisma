@@ -39,7 +39,7 @@ model Mitra {
   nama_toko       String      
   deskripsi_toko  String
   alamat          String
-  // linkGmaps       String 
+  linkGmaps       String 
   hari_buka       String      
   jam_buka        String
   jam_tutup       String
