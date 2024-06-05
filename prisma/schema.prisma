@@ -39,7 +39,7 @@ model Mitra {
   nama_toko       String      
   deskripsi_toko  String
   alamat          String
-  linkGmaps       String 
+  linkGmaps       String      @default("")
   hari_buka       String      
   jam_buka        String
   jam_tutup       String
@@ -75,6 +75,7 @@ model Produk {
   mitra             Mitra     @relation(fields: [mitraId], references: [id])
   mitraId           Int
   orderList         OrderList[]
+  show_produk       Boolean   @default(true)
   created_at        DateTime  @default(now())
   updated_at        DateTime  @updatedAt
 }
@@ -167,6 +168,11 @@ model Chat {
   isRead      Boolean
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt  
+}
+
+model Analytic {
+  id    Int     @default(autoincrement()) @id
+
 }
 
 enum Payment {

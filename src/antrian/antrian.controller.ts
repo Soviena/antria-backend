@@ -20,8 +20,8 @@ export class AntrianController {
   }
 
   @Get('mitra/:id')
-  async findAntriansByMitraId(@Param('id') mitraId: string): Promise<Antrian[] | null> {
-    return this.antrianService.findAntriansByMitraId(Number(mitraId));
+  async findAntriansByMitraId(@Param('id') mitraId: string, @Body() data: any): Promise<Antrian[] | null> {    
+    return this.antrianService.findAntriansByMitraId(Number(mitraId), data);
   }
 
   @Put(':id')

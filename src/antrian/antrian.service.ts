@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Antrian, Prisma } from '@prisma/client';
+import { take } from 'rxjs';
 
 @Injectable()
 export class AntrianService {
@@ -30,13 +31,34 @@ export class AntrianService {
     return this.prisma.antrian.delete({ where });
   }
 
-  async findAntriansByMitraId(mitraId: number): Promise<Antrian[]> {
-    return this.prisma.antrian.findMany({
-      where: {
+  async findAntriansByMitraId(mitraId: number, data:any): Promise<Antrian[]> {
+    let cursor: { id: any; }, where: { pesanan: { mitraId: number; } | { mitraId: number; }; orderstatus?: any; }
+    if (data.antrianId) {
+      cursor = {
+        id : Number(data.antrianId)
+      }
+    }
+    if (data.statusOrder) {
+      where = {
         pesanan: {
           mitraId: mitraId
         },
+        orderstatus: data.statusOrder
+      }
+    }else{
+      where = {
+        pesanan: {
+          mitraId: mitraId
+        },
+      }
+    }
+    return this.prisma.antrian.findMany({
+      cursor,
+      where,
+      orderBy: {
+        created_at: 'desc'
       },
+      take: data.limit ? data.limit : 4
     });
   }
 

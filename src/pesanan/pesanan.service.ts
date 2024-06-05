@@ -157,6 +157,19 @@ export class PesananService {
     });
   }
 
+  async pesanansByPelangganId(pelangganId: number): Promise<Pesanan[]> {
+    return this.prisma.pesanan.findMany({
+      where: {
+        pelangganId: pelangganId
+      },
+      include: { 
+        oderlist: {
+          include: {produk: true}
+        },      
+      }
+    });
+  }
+
   async pesanansByMitraIdSuccess(mitraId: number): Promise<Pesanan[]> {
     return this.prisma.pesanan.findMany({
       where: {

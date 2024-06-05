@@ -91,6 +91,7 @@ export class ProdukService {
     return this.prisma.produk.findMany({
       where: {
         mitraId: mitraId,
+        show_produk:true
       },
     });
   }
