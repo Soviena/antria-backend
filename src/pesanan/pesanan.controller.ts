@@ -29,6 +29,16 @@ export class PesananController {
     return this.pesananService.pesanansByMitraId(parseInt(mitraId,10));
   }
 
+  @Get('pelanggan/:pelangganId')
+  async findByPelanggan(@Param('pelangganId') pelangganId: string): Promise<Pesanan[]> {
+    return this.pesananService.pesanansByPelangganId(parseInt(pelangganId,10));
+  }
+
+  @Get('pelanggan/:pelangganId/:status')
+  async findByPelangganIfStatus(@Param('pelangganId') pelangganId: string, @Param('status') status: string, @Body() data: any): Promise<Pesanan[]> {
+    return this.pesananService.pesanansByPelangganIdStatus(parseInt(pelangganId,10), status, data);
+  }
+
   @Get('mitra/:mitraId/success')
   async findByMitraIfSuccess(@Param('mitraId') mitraId: string): Promise<Pesanan[]> {
     return this.pesananService.pesanansByMitraIdSuccess(parseInt(mitraId,10));
@@ -62,7 +72,8 @@ export class PesananController {
     const pesanan = await this.pesananService.updatePesanan({
       where: { invoice },
       data: {
-        status:"SUCCESS"
+        status:"SUCCESS",
+        antrianId: antrian.id
       }
     });
     return {antrian:antrian,pesanan:pesanan}

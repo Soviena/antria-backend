@@ -98,7 +98,7 @@ model OrderList {
 // INVCGA1RO2131026032024
 
 model Pesanan {
-  invoice     String        @id  
+  invoice     String        @id
   payment     Payment
   pemesanan   OrderType?    @default(ONLINE)
   takeaway    Boolean       @default(false)

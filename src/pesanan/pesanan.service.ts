@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Pesanan, Prisma } from '@prisma/client';
+import { OrderStatus, PaymentStatus, Pesanan, Prisma } from '@prisma/client';
 import { OrderlistService } from 'src/orderlist/orderlist.service';
 
 @Injectable()
@@ -166,6 +166,36 @@ export class PesananService {
         oderlist: {
           include: {produk: true}
         },      
+      }
+    });
+  }
+
+  async pesanansByPelangganIdStatus(pelangganId: number, s: string, data:any): Promise<Pesanan[]> {
+    let where: { pelangganId?: number; status?: PaymentStatus; antrian?: {orderstatus: OrderStatus}}
+    where = {}
+    switch (s.toUpperCase()) {
+      case "PENDING":
+        where.status = "PENDING"
+        break;
+      case "SUCCESS":
+        where.status = "SUCCESS"
+        break;
+      case "FAILED":
+        where.status = "FAILED"
+        break;
+    }
+    where.pelangganId = pelangganId
+    if (data.status_order) {
+      where.antrian = {orderstatus: data.status_order}
+    }
+    return this.prisma.pesanan.findMany({
+      where,
+      include: { 
+        oderlist: {
+          include: {produk: true}
+        },
+        pelanggan: true,
+        antrian: true
       }
     });
   }
