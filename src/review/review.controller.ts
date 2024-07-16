@@ -19,20 +19,27 @@ export class ReviewController {
     return this.reviewService.getAllReviewsFromMitra(parseInt(mitraId));
   }
 
+  @Get('pelanggan/:pelangganId')
+  async getAllReviewsFromPelanggan(@Param('pelangganId') pelangganId:string): Promise<Review[]> {
+    return this.reviewService.getAllReviewsFromPelanggan(parseInt(pelangganId));
+  }
+
   @Get(':mitraId/:pelangganId')
   async getReview(
-    @Param('mitraId') mitraId: number,
-    @Param('pelangganId') pelangganId: number
+    @Param('mitraId') mitraId: string,
+    @Param('pelangganId') pelangganId: string
   ): Promise<Review | null> {
-    return this.reviewService.getReview(mitraId, pelangganId);
+    return this.reviewService.getReview(parseInt(mitraId), parseInt(pelangganId));
   }
 
   @Put(':mitraId/:pelangganId')
   async updateReview(
-    @Param('mitraId') mitraId: number,
-    @Param('pelangganId') pelangganId: number,
+    @Param('mitraId') mId: string,
+    @Param('pelangganId') pId: string,
     @Body() data: any
   ): Promise<Review> {
+    let mitraId = parseInt(mId)
+    let pelangganId = parseInt(pId)
     return this.reviewService.updateReview({ mitraId, pelangganId, data });
   }
 

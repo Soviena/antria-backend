@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PelangganService } from '../pelanggan/pelanggan.service';
 import { KaryawanService } from 'src/karyawan/karyawan.service';
 import { JwtService } from '@nestjs/jwt';
@@ -14,7 +14,10 @@ export class AuthService {
 
     async signInPelanggan(username: string, pass: string): Promise<any> {
       const user = await this.pelangganService.findOne(username);
-      if (!bcrypt.compare(user?.password, pass)) {
+      if (!user) {
+        throw new NotFoundException()
+      }
+      if (! await bcrypt.compare(pass, user.password)) {
         throw new UnauthorizedException();
       }
       const payload = { 
@@ -31,7 +34,10 @@ export class AuthService {
 
     async signInMitra(username: string, pass: string): Promise<any> {
       const user = await this.karyawanService.findOne(username);
-      if (!bcrypt.compare(user?.password, pass)) {
+      if (!user) {
+        throw new NotFoundException()
+      }
+      if (! await bcrypt.compare(pass, user.password)) {
         throw new UnauthorizedException();
       }
       const payload = { 

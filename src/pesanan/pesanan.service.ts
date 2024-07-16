@@ -2,10 +2,16 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '../prisma.service';
 import { OrderStatus, PaymentStatus, Pesanan, Prisma } from '@prisma/client';
 import { OrderlistService } from 'src/orderlist/orderlist.service';
+import { AntrianService } from 'src/antrian/antrian.service';
+
 
 @Injectable()
 export class PesananService {
-  constructor(private prisma: PrismaService, private orderListService: OrderlistService) {}
+  constructor(
+    private prisma: PrismaService,
+    private orderListService: OrderlistService,
+    private antrianService: AntrianService
+  ) {}
 
   async pesanan(
     pesananWhereUniqueInput: Prisma.PesananWhereUniqueInput,
@@ -40,31 +46,36 @@ export class PesananService {
     });
   }
 
-  async createPesanan(data: any): Promise<Pesanan> {
-    const { mitraId,pelangganId, ...pesananData } = data;
+  async createPesanan(data: any): Promise<any> {
+    const { order_lists, pesanan } = data;
+    let { pemesanan,mitraId,pelangganId,invoice,status, ...pesananData } = pesanan;
     if (!mitraId) throw new BadRequestException(`Mitra id is required`);   
-    // Check if pelanggan is provided
-    if (!pelangganId) throw new BadRequestException(`Pelanggan Id is required`);   
-    // Check if the mitra exists
+    if (!pelangganId && pemesanan != "OFFLINE") throw new BadRequestException(`Pelanggan Id is required`);   
     const existingMitra = await this.prisma.mitra.findUnique({
       where: { id: mitraId }
     });
     if (!existingMitra) {
-      throw new NotFoundException(`M    const existingPelanggan = await this.prisma.pelanggan.findUnique({
-        where: { id: pelangganId }
-      });itra with ID ${mitraId} not found.`);
+      throw new NotFoundException(`Mitra with ID ${mitraId} not found.`);
     }
-    const existingPelanggan = await this.prisma.pelanggan.findUnique({
+    if (!pelangganId) {
+      pelangganId = 0
+    }
+    var existingPelanggan = await this.prisma.pelanggan.findUnique({
       where: { id: pelangganId }
     });
     if (!existingPelanggan) {
       throw new NotFoundException(`Pelanggan with ID ${pelangganId} not found.`);
     }
-    const now = new Date();
-    const invoice = `INVC${existingMitra.nama_toko.slice(0,2).toUpperCase()}${existingMitra.id}${existingPelanggan.nama.slice(0,2).toUpperCase()}${existingPelanggan.id}${Math.floor(now.getTime() / 1000)}`
-    return this.prisma.pesanan.create({
+    if (!invoice){
+      let now = new Date();
+      invoice = `INVC${existingMitra.nama_toko.slice(0,2).toUpperCase()}${existingMitra.id}${existingPelanggan.nama.slice(0,2).toUpperCase()}${existingPelanggan.id}${Math.floor(now.getTime() / 1000)}`
+    }
+
+    let p = await this.prisma.pesanan.create({
       data: {
         invoice,
+        status,
+        pemesanan,
         ...pesananData,
         mitra: {
           connect: { id: mitraId }
@@ -72,57 +83,30 @@ export class PesananService {
         pelanggan: {
           connect: { id: pelangganId }
         }
-      } 
+      }
     });
-  }
-
-  async createPesananWithOrderList(data: any): Promise<any> {
-    const { orderLists, pesananData } = data;
-    const { mitraId, pelangganId, ...dataPesanan } = pesananData
-    
-    // Check if mitraId is provided
-    if (!mitraId) throw new BadRequestException(`Mitra id is required`);   
-    
-    // Check if pelanggan is provided
-    if (!pelangganId) throw new BadRequestException(`Pelanggan Id is required`);   
-    
-    // Check if the mitra exists
-    const existingMitra = await this.prisma.mitra.findUnique({
-      where: { id: mitraId }
-    });
-    if (!existingMitra) {
-      throw new NotFoundException(`Mitra with ID ${mitraId} not found.`);
+    if (order_lists){
+      var responseOrderList = []
+      for (let index = 0; index < order_lists.length; index++) {
+          const element = order_lists[index];
+          responseOrderList.push(await this.orderListService.createOrderList({ pesananId: invoice, ...element}));
+      }
     }
 
-    // Check if pelanggan exists
-    const existingPelanggan = await this.prisma.pelanggan.findUnique({
-      where: { id: pelangganId }
-    });
-    if (!existingPelanggan) {
-      throw new NotFoundException(`Pelanggan with ID ${pelangganId} not found.`);
+    if (!status || status != "SUCCESS") {
+      return {pesanan: p, orderlists: responseOrderList}
     }
-    const now = new Date();
-    const invoice = `INVC${existingMitra.nama_toko.slice(0,2).toUpperCase()}${existingMitra.id}${existingPelanggan.nama.slice(0,2).toUpperCase()}${existingPelanggan.id}${Math.floor(now.getTime() / 1000)}`
-
-    const pesanan = await this.prisma.pesanan.create({
+    const antrian = await this.antrianService.createAntrian({
+      estimasi:30,
+      pesananInvoice:invoice
+    });
+    let pa = await this.updatePesanan({
+      where: { invoice },
       data: {
-        invoice,
-        ...dataPesanan,
-        mitra: {
-          connect: { id: mitraId }
-        },
-        pelanggan: {
-          connect: { id: pelangganId }
-        }
-      } 
+        antrianId: antrian.id
+      }
     });
-
-    let responseOrderList = []
-    for (let index = 0; index < orderLists.length; index++) {
-        const element = orderLists[index];
-        responseOrderList.push(await this.orderListService.createOrderList({ pesananId: pesanan.invoice, ...element}));
-    }
-    return {pesanan, responseOrderList}
+    return {pesanan: pa, orderlists: responseOrderList}
   }
 
   async updatePesanan(params: {
@@ -165,7 +149,7 @@ export class PesananService {
       include: { 
         oderlist: {
           include: {produk: true}
-        },      
+        },
       }
     });
   }
@@ -186,6 +170,7 @@ export class PesananService {
     }
     where.pelangganId = pelangganId
     if (data.status_order) {
+      console.log(data.status_order)
       where.antrian = {orderstatus: data.status_order}
     }
     return this.prisma.pesanan.findMany({

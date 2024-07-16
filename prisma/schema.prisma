@@ -34,13 +34,13 @@ model Pelanggan {
 
 model Mitra {
   id              Int         @default(autoincrement()) @id
-  // sektor          Sektor[]    
-  // kategori        Kategori[]  
-  nama_toko       String      
+  // sektor          Sektor[]
+  // kategori        Kategori[]
+  nama_toko       String
   deskripsi_toko  String
   alamat          String
   linkGmaps       String      @default("")
-  hari_buka       String      
+  hari_buka       String
   jam_buka        String
   jam_tutup       String
   gambar_toko     String      @default("")
@@ -68,8 +68,8 @@ model Mitra {
 model Produk {
   id                Int       @default(autoincrement()) @id
   nama_produk       String
-  deskripsi_produk  String 
-  harga             Int       
+  deskripsi_produk  String
+  harga             Int
   gambar            String    @default("default.png")
   kuantitas         Int       @default(10)
   mitra             Mitra     @relation(fields: [mitraId], references: [id])
@@ -122,8 +122,8 @@ model Antrian {
   id          Int         @default(autoincrement()) @id
   estimasi    Int?
   orderstatus OrderStatus @default(WAITING)
-  pesanan     Pesanan     @relation(fields: [pesananId], references: [invoice])
-  pesananId   String      @unique
+  pesanan     Pesanan?     @relation(fields: [pesananId], references: [invoice])
+  pesananId   String?      @unique
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
 }
@@ -161,13 +161,13 @@ model Chat {
   id          Int       @default(autoincrement()) @id
   message     String
   attachment  String?
-  pelanggan   Pelanggan @relation(fields: [pelangganId], references: [id])
-  pelangganId Int
+  pelanggan   Pelanggan? @relation(fields: [pelangganId], references: [id])
+  pelangganId Int?
   mitra       Mitra     @relation(fields: [mitraId], references: [id])
   mitraId     Int
   isRead      Boolean
   created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt  
+  updated_at  DateTime  @updatedAt
 }
 
 model Analytic {
