@@ -1,11 +1,9 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guards';
-import * as bcrypt from 'bcrypt';
+import MitraOnlyId, { AuthGuard, MitraOnly } from './auth.guards';
 import { ApiTags } from '@nestjs/swagger';
 import { LoginPelangganDto } from './dto/loginPelanggan.dto';
 import { LoginMitraDto } from './dto/loginMitra.dto';
-
 
 @Controller('auth')
 @ApiTags('auth')
@@ -25,8 +23,8 @@ export class AuthController {
         return this.authService.signInMitra(signInDto.username, signInDto.password);
     }
 
-    @UseGuards(AuthGuard)
     @Get('profile')
+    @UseGuards(AuthGuard,MitraOnly)
     getProfile(@Request() req) {
         return req.user;
     }

@@ -5,6 +5,7 @@ import { PelangganModule } from 'src/pelanggan/pelanggan.module';
 import { jwtConstants } from './constants';
 import { JwtModule } from '@nestjs/jwt';
 import { KaryawanModule } from 'src/karyawan/karyawan.module';
+import { AuthGuard } from './auth.guards';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { KaryawanModule } from 'src/karyawan/karyawan.module';
     KaryawanModule
   ],
   controllers: [AuthController],
-  providers: [AuthService],
-  exports: [AuthService]
+  providers: [AuthService,AuthGuard],
+  exports: [AuthService,AuthGuard]
 })
 export class AuthModule {}

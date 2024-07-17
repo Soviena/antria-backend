@@ -47,7 +47,8 @@ export class AuthService {
         mitraId: user.mitraId, 
         picture: user.profile_picture, 
         email:user.email,
-        isOwner:user.isOwner
+        isOwner:user.isOwner,
+        admin:false
       };
       return {
         access_token: await this.jwtService.signAsync(payload),
