@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { KaryawanService } from './karyawan.service';
 import { Karyawan } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -7,6 +7,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
+import MitraOnlyId, { AdminOnly, AuthGuard, MitraOnly, OwnerOnly } from 'src/auth/auth.guards';
 
 
 @Controller('karyawan')
@@ -16,16 +17,19 @@ export class KaryawanController {
   constructor(private karyawanService: KaryawanService) {}
 
   @Get()
+  @UseGuards(AdminOnly)
   async findAll(): Promise<Karyawan[]> {
     return this.karyawanService.karyawans({});
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   async findOne(@Param('id') id: string): Promise<Karyawan> {
     return this.karyawanService.karyawan({ id: parseInt(id) });
   }
 
   @Post()
+  @UseGuards(AuthGuard, MitraOnly, OwnerOnly)
   async create(@Body() data: any): Promise<Karyawan> {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const karyawanData = { ...data, password: hashedPassword };
@@ -33,6 +37,7 @@ export class KaryawanController {
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('profile_picture',{
     storage: diskStorage({
       destination: "./MediaUpload/",
@@ -76,11 +81,13 @@ export class KaryawanController {
   }
 
   @Delete(':id')
+  @UseGuards(AdminOnly)
   async remove(@Param('id') id: string): Promise<Karyawan> {
     return this.karyawanService.deleteKaryawan({ id: parseInt(id) });
   }
 
   @Get('mitra/:mitraId')
+  @UseGuards(AuthGuard, MitraOnly, MitraOnlyId('mitraId'), OwnerOnly)
   async findByMitra(@Param('mitraId') mitraId: string): Promise<Karyawan[]> {
     return this.karyawanService.karyawansByMitraId(parseInt(mitraId, 10));
   }

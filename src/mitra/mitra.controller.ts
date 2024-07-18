@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { MitraService } from './mitra.service';
 import { Mitra } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -7,6 +7,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
+import MitraOnlyId, { AuthGuard, MitraOnly, OwnerOnly } from 'src/auth/auth.guards';
 
 
 @Controller('mitra')
@@ -17,11 +18,13 @@ export class MitraController {
 
 
   @Get()
+  @UseGuards(AuthGuard)
   async findAll(): Promise<Mitra[]> {
     return this.mitraService.mitras({});
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   async findOne(@Param('id') id: string): Promise<Mitra> {
     return this.mitraService.mitra({ id: parseInt(id) });
   }
@@ -38,8 +41,9 @@ export class MitraController {
     karyawanData = { ...karyawanData, password: hashedPassword };
     return this.mitraService.createMitraWithOwner({mitraData, karyawanData});
   }
-  
+
   @Put(':id')
+  @UseGuards(AuthGuard,MitraOnly, MitraOnlyId('id'))
   @UseInterceptors(FileInterceptor('gambar_toko',{
     storage: diskStorage({
       destination: "./MediaUpload/",
@@ -83,6 +87,7 @@ export class MitraController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard,MitraOnly,MitraOnlyId('id'),OwnerOnly)
   async remove(@Param('id') id: string): Promise<Mitra> {
     return this.mitraService.deleteMitra({ id: parseInt(id) });
   }

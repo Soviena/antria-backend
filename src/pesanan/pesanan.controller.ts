@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards } from '@nestjs/common';
 import { PesananService } from './pesanan.service';
 import { Pesanan } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 import { AntrianService } from 'src/antrian/antrian.service';
+import { AuthGuard } from 'src/auth/auth.guards';
 
 @Controller('pesanan')
 @ApiTags('pesanan')
@@ -15,43 +16,51 @@ export class PesananController {
   ) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   async findAll(): Promise<Pesanan[]> {
     return this.pesananService.pesanans({});
   }
 
   @Get(':invoice')
+  @UseGuards(AuthGuard)
   async findOne(@Param('invoice') invoice: string): Promise<Pesanan> {
     return this.pesananService.pesanan({ invoice });
   }
 
   @Get('mitra/:mitraId')
+  @UseGuards(AuthGuard)
   async findByMitra(@Param('mitraId') mitraId: string): Promise<Pesanan[]> {
     return this.pesananService.pesanansByMitraId(parseInt(mitraId,10));
   }
 
   @Get('pelanggan/:pelangganId')
+  @UseGuards(AuthGuard)
   async findByPelanggan(@Param('pelangganId') pelangganId: string): Promise<Pesanan[]> {
     return this.pesananService.pesanansByPelangganId(parseInt(pelangganId,10));
   }
 
   @Get('pelanggan/:pelangganId/:status')
+  @UseGuards(AuthGuard)
   async findByPelangganIfStatus(@Param('pelangganId') pelangganId: string, @Param('status') status: string, @Body() data: any): Promise<Pesanan[]> {
     return this.pesananService.pesanansByPelangganIdStatus(parseInt(pelangganId,10), status, data);
   }
 
   @Get('mitra/:mitraId/success')
+  @UseGuards(AuthGuard)
   async findByMitraIfSuccess(@Param('mitraId') mitraId: string): Promise<Pesanan[]> {
     return this.pesananService.pesanansByMitraIdSuccess(parseInt(mitraId,10));
   }
 
 
   @Post()
+  @UseGuards(AuthGuard)
   async create(@Body() data: any): Promise<Pesanan> {
     return this.pesananService.createPesanan(data);
   }
 
 
   @Put(':invoice')
+  @UseGuards(AuthGuard)
   async update(@Param('invoice') invoice: string, @Body() data: Pesanan): Promise<Pesanan> {
     return this.pesananService.updatePesanan({
       where: { invoice },
@@ -60,6 +69,7 @@ export class PesananController {
   }
 
   @Put(':invoice/success')
+  @UseGuards(AuthGuard)
   async setSuccess(@Param('invoice') invoice: string): Promise<any> {
     const antrian = await this.antrianService.createAntrian({
       estimasi:30,
@@ -76,6 +86,7 @@ export class PesananController {
   }
 
   @Put(':invoice/failed')
+  @UseGuards(AuthGuard)
   async setFailed(@Param('invoice') invoice: string): Promise<Pesanan> {
     return this.pesananService.updatePesanan({
       where: { invoice },
@@ -86,6 +97,7 @@ export class PesananController {
   }
 
   @Put(':invoice/pending')
+  @UseGuards(AuthGuard)
   async setPending(@Param('invoice') invoice: string): Promise<Pesanan> {
     return this.pesananService.updatePesanan({
       where: { invoice },
@@ -96,6 +108,7 @@ export class PesananController {
   }
 
   @Delete(':invoice')
+  @UseGuards(AuthGuard)
   async remove(@Param('invoice') invoice: string): Promise<Pesanan> {
     return this.pesananService.deletePesanan({ invoice });
   }

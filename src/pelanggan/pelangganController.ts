@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { PelangganService } from './pelanggan.service';
 import { Pelanggan } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
@@ -8,6 +8,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthGuard } from 'src/auth/auth.guards';
 // import * as fs from 'fs';
 
 
@@ -18,16 +19,19 @@ export class PelangganController {
   constructor(private pelangganService: PelangganService) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   async findAll(): Promise<Pelanggan[]> {
     return this.pelangganService.pelanggans({});
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   async findOne(@Param('id') id: string): Promise<Pelanggan> {
     return this.pelangganService.pelanggan({ id: parseInt(id) });
   }
 
   @Post()
+  @UseGuards(AuthGuard)
   async create(@Body() data: CreatePelangganDto): Promise<Pelanggan> {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const pelangganData = { ...data, password: hashedPassword };
@@ -35,6 +39,7 @@ export class PelangganController {
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('profile_picture',{
     storage: diskStorage({
       destination: "./MediaUpload/",
@@ -77,8 +82,9 @@ export class PelangganController {
     });
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string): Promise<Pelanggan> {
-    return this.pelangganService.deletePelanggan({ id: parseInt(id) });
-  }
+  // @Delete(':id')
+  // @UseGuards(AuthGuard)
+  // async remove(@Param('id') id: string): Promise<Pelanggan> {
+  //   return this.pelangganService.deletePelanggan({ id: parseInt(id) });
+  // }
 }

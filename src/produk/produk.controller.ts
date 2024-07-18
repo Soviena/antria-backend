@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { ProdukService } from './produk.service';
 import { Produk } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
@@ -6,6 +6,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
+import { AuthGuard, MitraOnly, OwnerOnly } from 'src/auth/auth.guards';
 
 
 
@@ -16,16 +17,19 @@ export class ProdukController {
   constructor(private produkService: ProdukService) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   async findAll(): Promise<Produk[]> {
     return this.produkService.produks({});
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   async findOne(@Param('id') id: string): Promise<Produk> {
     return this.produkService.produk({ id: parseInt(id) });
   }
 
   @Post()
+  @UseGuards(AuthGuard,MitraOnly,OwnerOnly)
   @UseInterceptors(FileInterceptor('gambar',{
     storage: diskStorage({
       destination: "./MediaUpload/",
@@ -49,6 +53,7 @@ export class ProdukController {
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard,MitraOnly,OwnerOnly)
   @UseInterceptors(FileInterceptor('gambar',{
     storage: diskStorage({
       destination: "./MediaUpload/",
@@ -93,11 +98,13 @@ export class ProdukController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard,MitraOnly,OwnerOnly)
   async remove(@Param('id') id: string): Promise<Produk> {
     return this.produkService.deleteProduk({ id: parseInt(id) });
   }
 
   @Get('mitra/:mitraId')
+  @UseGuards(AuthGuard)
   async findByMitra(@Param('mitraId') mitraId: string): Promise<Produk[]> {
     return this.produkService.produksByMitraId(parseInt(mitraId, 10));
   }
