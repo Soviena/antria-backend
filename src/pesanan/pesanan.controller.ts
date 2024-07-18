@@ -3,7 +3,7 @@ import { PesananService } from './pesanan.service';
 import { Pesanan } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
 import { AntrianService } from 'src/antrian/antrian.service';
-import { AuthGuard } from 'src/auth/auth.guards';
+import { AuthGuard, MitraOnly } from 'src/auth/auth.guards';
 
 @Controller('pesanan')
 @ApiTags('pesanan')
@@ -69,10 +69,18 @@ export class PesananController {
   }
 
   @Put(':invoice/success')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, MitraOnly)
   async setSuccess(@Param('invoice') invoice: string): Promise<any> {
+    const p = await this.pesananService.pesanan({invoice})
+    const mitraid = p.mitraId
+    const q = await this.antrianService.findAntriansByMitraId(mitraid, {statusOrder: "ALLDONE"})
+    let waitTime = 0
+    for (let i = 0; i < q.length; i++) {
+      const queue = q[i];
+      waitTime += getDifferenceInMinutes(queue.created_at, queue.updated_at)
+    }
     const antrian = await this.antrianService.createAntrian({
-      estimasi:30,
+      estimasi:waitTime,
       pesananInvoice:invoice
     });
     const pesanan = await this.pesananService.updatePesanan({
@@ -113,3 +121,9 @@ export class PesananController {
     return this.pesananService.deletePesanan({ invoice });
   }
 }
+
+function getDifferenceInMinutes(date1: Date, date2: Date): number {
+  const diffInMs = Math.abs(date2.getTime() - date1.getTime()); // Difference in milliseconds
+  return Math.floor(diffInMs / (1000 * 60)); // Convert to minutes and round down
+}
+
