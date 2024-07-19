@@ -79,6 +79,7 @@ export class PesananController {
       const queue = q[i];
       waitTime += getDifferenceInMinutes(queue.created_at, queue.updated_at)
     }
+    waitTime = Math.floor(waitTime/q.length)
     const antrian = await this.antrianService.createAntrian({
       estimasi:waitTime,
       pesananInvoice:invoice

@@ -96,8 +96,16 @@ export class PesananService {
     if (!status || status != "SUCCESS") {
       return {pesanan: p, orderlists: responseOrderList}
     }
+
+    const q = await this.antrianService.findAntriansByMitraId(mitraId, {statusOrder: "ALLDONE"})
+    let waitTime = 0
+    for (let i = 0; i < q.length; i++) {
+      const queue = q[i];
+      waitTime += getDifferenceInMinutes(queue.created_at, queue.updated_at)
+    }
+    waitTime = Math.floor(waitTime/q.length)
     const antrian = await this.antrianService.createAntrian({
-      estimasi:30,
+      estimasi:waitTime,
       pesananInvoice:invoice
     });
     let pa = await this.updatePesanan({
@@ -201,3 +209,9 @@ export class PesananService {
     });
   }
 }
+
+function getDifferenceInMinutes(date1: Date, date2: Date): number {
+  const diffInMs = Math.abs(date2.getTime() - date1.getTime()); // Difference in milliseconds
+  return Math.floor(diffInMs / (1000 * 60)); // Convert to minutes and round down
+}
+
