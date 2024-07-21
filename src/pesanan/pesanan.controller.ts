@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, NotFoundException } from '@nestjs/common';
 import { PesananService } from './pesanan.service';
 import { Pesanan } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
@@ -72,14 +72,21 @@ export class PesananController {
   @UseGuards(AuthGuard, MitraOnly)
   async setSuccess(@Param('invoice') invoice: string): Promise<any> {
     const p = await this.pesananService.pesanan({invoice})
+    if (!p) {
+      throw new NotFoundException(`Pesanan with Invoice ${invoice} not found.`);
+    }
     const mitraid = p.mitraId
     const q = await this.antrianService.findAntriansByMitraId(mitraid, {statusOrder: "ALLDONE"})
     let waitTime = 0
-    for (let i = 0; i < q.length; i++) {
-      const queue = q[i];
-      waitTime += getDifferenceInMinutes(queue.created_at, queue.updated_at)
+    if (q.length != 0){
+      for (let i = 0; i < q.length; i++) {
+        const queue = q[i];
+        waitTime += getDifferenceInMinutes(queue.created_at, queue.updated_at)
+      }
+      waitTime = Math.floor(waitTime/q.length)
+    }else{
+      waitTime = 10
     }
-    waitTime = Math.floor(waitTime/q.length)
     const antrian = await this.antrianService.createAntrian({
       estimasi:waitTime,
       pesananInvoice:invoice

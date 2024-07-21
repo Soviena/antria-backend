@@ -99,11 +99,15 @@ export class PesananService {
 
     const q = await this.antrianService.findAntriansByMitraId(mitraId, {statusOrder: "ALLDONE"})
     let waitTime = 0
-    for (let i = 0; i < q.length; i++) {
-      const queue = q[i];
-      waitTime += getDifferenceInMinutes(queue.created_at, queue.updated_at)
+    if (q.length != 0){
+      for (let i = 0; i < q.length; i++) {
+        const queue = q[i];
+        waitTime += getDifferenceInMinutes(queue.created_at, queue.updated_at)
+      }
+      waitTime = Math.floor(waitTime/q.length)
+    }else{
+      waitTime = 10
     }
-    waitTime = Math.floor(waitTime/q.length)
     const antrian = await this.antrianService.createAntrian({
       estimasi:waitTime,
       pesananInvoice:invoice

@@ -73,13 +73,20 @@ export class PelangganController {
       // }
       profile_picture = file.filename;
     }
-    return this.pelangganService.updatePelanggan({
-      where: { id: parseInt(id) },
-      data: {
-        profile_picture,
-        ...data
-      },
-    });
+    if (profile_picture){
+      return this.pelangganService.updatePelanggan({
+        where: { id: parseInt(id) },
+        data: {
+          profile_picture,
+          ...data
+        },
+      });
+    }else{
+      return this.pelangganService.updatePelanggan({
+        where: { id: parseInt(id) },
+        data,
+      });
+    }
   }
 
   // @Delete(':id')
