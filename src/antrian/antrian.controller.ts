@@ -10,12 +10,6 @@ import { AuthGuard, OwnerOnly } from 'src/auth/auth.guards';
 export class AntrianController {
   constructor(private antrianService: AntrianService) {}
 
-  @Post()
-  @UseGuards(AuthGuard)
-  async create(@Body() data: Prisma.AntrianCreateInput): Promise<Antrian> {
-    return this.antrianService.createAntrian(data);
-  }
-
   @Get(':id')
   @UseGuards(AuthGuard)
   async findOne(@Param('id') id: string): Promise<Antrian | null> {

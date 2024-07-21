@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import MitraOnlyId, { AuthGuard, MitraOnly } from './auth.guards';
+import MitraOnlyId, { AuthGuard, MitraOnly, OwnerOnly } from './auth.guards';
 import { ApiTags } from '@nestjs/swagger';
 import { LoginPelangganDto } from './dto/loginPelanggan.dto';
 import { LoginMitraDto } from './dto/loginMitra.dto';
@@ -26,6 +26,11 @@ export class AuthController {
     @Get('profile')
     @UseGuards(AuthGuard,MitraOnly)
     getProfile(@Request() req) {
+        return req.user;
+    }
+    @Get('profile2/:id')
+    @UseGuards(AuthGuard,MitraOnly,MitraOnlyId('id'),OwnerOnly)
+    getProfile2(@Request() req) {
         return req.user;
     }
 }

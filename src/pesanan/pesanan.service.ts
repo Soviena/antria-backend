@@ -182,7 +182,6 @@ export class PesananService {
     }
     where.pelangganId = pelangganId
     if (data.status_order) {
-      console.log(data.status_order)
       where.antrian = {orderstatus: data.status_order}
     }
     return this.prisma.pesanan.findMany({
