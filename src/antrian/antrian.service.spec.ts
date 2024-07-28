@@ -86,7 +86,7 @@ describe('AntrianService', () => {
     });
     it('should return an array of antrians by mitra id', async () => {
       const mitraId = 1;
-      const data = { limit: 2 };
+      const data = { };
       const mockAntrians: Antrian[] = [
         { id: 1, pesananId: 'INVC11223344', estimasi: 30, created_at: new Date() } as Antrian,
         { id: 2, pesananId: 'INVC222334444', estimasi: 20, created_at: new Date() } as Antrian,

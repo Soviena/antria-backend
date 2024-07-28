@@ -31,7 +31,7 @@ export class PelangganController {
   }
 
   @Post()
-  @UseGuards(AuthGuard)
+  @UseGuards()
   async create(@Body() data: CreatePelangganDto): Promise<Pelanggan> {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const pelangganData = { ...data, password: hashedPassword };
