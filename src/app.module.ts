@@ -11,9 +11,21 @@ import { OrderlistModule } from './orderlist/orderlist.module';
 import { AntrianModule } from './antrian/antrian.module';
 import { ReviewModule } from './review/review.module';
 import { ImageModule } from './image/image.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, PelangganModule, MitraModule, ProdukModule, KaryawanModule, PesananModule, OrderlistModule, AntrianModule, ReviewModule, ImageModule],
+  imports: [ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }), AuthModule, PelangganModule, MitraModule, ProdukModule, KaryawanModule, PesananModule, OrderlistModule, AntrianModule, ReviewModule, ImageModule,
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        port: parseInt(process.env.EMAIL_PORT),
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
+    }),
+  ],
   controllers: [],
   providers: [PrismaService],
 })

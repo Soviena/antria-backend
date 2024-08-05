@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.0.x"]
 }
 
 datasource db {
@@ -28,6 +29,7 @@ model Pelanggan {
   pesanan         Pesanan[]
   chat            Chat[]
   wallet          Int       @default(0)
+  otp             String    @default("")
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
 }
@@ -135,6 +137,7 @@ model Karyawan {
   handphone       String    @default("")
   alamat          String    @default("")
   isOwner         Boolean   @default(false)
+  otp             String    @default("")
   mitra           Mitra     @relation(fields: [mitraId], references: [id])
   mitraId         Int
   created_at      DateTime  @default(now())

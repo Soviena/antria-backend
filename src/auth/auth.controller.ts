@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, Request, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import MitraOnlyId, { AuthGuard, MitraOnly, OwnerOnly } from './auth.guards';
 import { ApiTags } from '@nestjs/swagger';
@@ -21,6 +21,23 @@ export class AuthController {
     @Post('login/mitra')
     async signInMitra(@Body() signInDto: LoginMitraDto) {
         return this.authService.signInMitra(signInDto.username, signInDto.password);
+    }
+
+    @Post('forgot/:userType/:email')
+    forgotPassword(
+        @Param('userType') userType: string,
+        @Param('email') email: string
+    ) {
+        return this.authService.sendForgotPasswordMail(userType,email);
+    }
+
+    @Post('verify-otp/:userType/:email/:otp')
+    verifyOtp(
+        @Param('userType') userType: string,
+        @Param('email') email: string,
+        @Param('otp') otp: string
+    ) {
+        return this.authService.verifyOtp(userType,email,otp);
     }
 
     @Get('profile')

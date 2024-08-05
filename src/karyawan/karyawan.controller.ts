@@ -81,7 +81,7 @@ export class KaryawanController {
   }
 
   @Delete(':id')
-  @UseGuards(AdminOnly)
+  @UseGuards(OwnerOnly)
   async remove(@Param('id') id: string): Promise<Karyawan> {
     return this.karyawanService.deleteKaryawan({ id: parseInt(id) });
   }

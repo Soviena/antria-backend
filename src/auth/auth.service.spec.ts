@@ -62,6 +62,7 @@ describe('AuthService', () => {
         handphone:"0822816594",
         alamat:"test",
         wallet:20000,
+        otp:"0",
         created_at: new Date(2024, 6, 21, 12, 0, 0),
         updated_at: new Date(2024, 6, 21, 12, 0, 0),
       };
@@ -107,6 +108,7 @@ describe('AuthService', () => {
         handphone:"0822816594",
         alamat:"test",
         wallet:20000,
+        otp:"0",
         created_at: new Date(2024, 6, 21, 12, 0, 0),
         updated_at: new Date(2024, 6, 21, 12, 0, 0),
       };
@@ -137,6 +139,7 @@ describe('AuthService', () => {
         alamat:"test",
         wallet:20000,
         mitraId:1,
+        otp:"0",
         isOwner:true,
         created_at: new Date(2024, 6, 21, 12, 0, 0),
         updated_at: new Date(2024, 6, 21, 12, 0, 0),
@@ -149,6 +152,7 @@ describe('AuthService', () => {
         picture: user.profile_picture,
         email: user.email,
         isOwner: user.isOwner,
+        otp:"0",
         admin: false,
       };
       jest.spyOn(karyawanService, 'findOne').mockResolvedValue(user);
@@ -188,6 +192,7 @@ describe('AuthService', () => {
         wallet:20000,
         mitraId:1,
         isOwner:true,
+        otp:"0",
         created_at: new Date(2024, 6, 21, 12, 0, 0),
         updated_at: new Date(2024, 6, 21, 12, 0, 0),
       };

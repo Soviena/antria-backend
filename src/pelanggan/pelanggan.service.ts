@@ -63,4 +63,12 @@ export class PelangganService {
     }
     return pelanggan;
   }
+
+  async findOneEmail(email: string): Promise<Pelanggan> {
+    const pelanggan = await this.pelanggan({ email:email });
+    if (!pelanggan) {
+      throw new NotFoundException(`Pelanggan with email ${email} not found.`);
+    }
+    return pelanggan;
+  }
 }

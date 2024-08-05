@@ -89,5 +89,12 @@ export class KaryawanService {
     }
     return karyawan;
   }
+  async findOneEmail(email: string): Promise<Karyawan> {
+    const karyawan = await this.karyawan({ email:email });
+    if (!karyawan) {
+      throw new NotFoundException(`Karyawan with Email ${email} not found.`);
+    }
+    return karyawan;
+  }
 
 }
