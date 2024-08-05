@@ -110,8 +110,17 @@ export class AuthService {
               otp: ""
             },
           })
+          const payload = { 
+            sub: user.id, 
+            username: user.username, 
+            role:"pelanggan", 
+            picture: user.profile_picture, 
+            email:user.email 
+          };
           return {
-            status: "success"
+            status: "success",
+            userId: user.id,
+            access_token: await this.jwtService.signAsync(payload),
           }
         }else {
           throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
@@ -128,8 +137,20 @@ export class AuthService {
               otp: ""
             },
           })
+          const payload = { 
+            sub: user.id, 
+            username: user.username, 
+            role:"karyawan", 
+            mitraId: user.mitraId, 
+            picture: user.profile_picture, 
+            email:user.email,
+            isOwner:user.isOwner,
+            admin:false
+          };
           return {
-            status: "success"
+            status: "success",
+            userId: user.id,
+            access_token: await this.jwtService.signAsync(payload),
           }
         }else {
           throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);

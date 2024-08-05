@@ -71,13 +71,22 @@ export class KaryawanController {
       // }
       profile_picture = file.filename;
     }
-    return this.karyawanService.updateKaryawan({
-      where: { id: parseInt(id) },
-      data: {
-        profile_picture,
+    if (profile_picture) {
+      return this.karyawanService.updateKaryawan({
+        where: { id: parseInt(id) },
+        data: {
+          profile_picture,
         ...data
-      },
-    });
+        },
+      });
+    }else{
+      return this.karyawanService.updateKaryawan({
+        where: { id: parseInt(id) },
+        data: {
+        ...data
+        },
+      });
+    }
   }
 
   @Delete(':id')

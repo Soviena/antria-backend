@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Pelanggan, Prisma } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class PelangganService {
@@ -44,10 +45,23 @@ export class PelangganService {
     data: Prisma.PelangganUpdateInput;
   }): Promise<Pelanggan> {
     const { where, data } = params;
-    return this.prisma.pelanggan.update({
-      data,
-      where,
-    });
+    const { password, ...karyawanData } = data
+    let hashedPassword
+    if (password) {
+      hashedPassword = await bcrypt.hash(String(password), 10);
+      return this.prisma.pelanggan.update({
+        data: {
+          password: hashedPassword,
+          ...karyawanData
+        },
+        where,
+      });
+    }else{
+      return this.prisma.pelanggan.update({
+        data,
+        where,
+      });
+    }
   }
 
   async deletePelanggan(where: Prisma.PelangganWhereUniqueInput): Promise<Pelanggan> {
