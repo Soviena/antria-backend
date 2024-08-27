@@ -30,7 +30,7 @@ export class AuthService {
         email:user.email 
       };
       return {
-        access_token: await this.jwtService.signAsync(payload),
+        access_token: await this.jwtService.signAsync(payload, { expiresIn: '7d' }),
       };
     }
 
@@ -53,7 +53,7 @@ export class AuthService {
         admin:false
       };
       return {
-        access_token: await this.jwtService.signAsync(payload),
+        access_token: await this.jwtService.signAsync(payload, { expiresIn: '1d' }),
       };
     }
 
