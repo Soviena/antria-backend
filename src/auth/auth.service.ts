@@ -103,7 +103,7 @@ export class AuthService {
         if (!user) {
           throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
         }
-        if (user.otp === otp){
+        if (user.otp === otp || parseInt(user.otp) == parseInt(otp)){
           await this.pelangganService.updatePelanggan({
             where: { email: email },
             data: {
