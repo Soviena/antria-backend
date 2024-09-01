@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Delete, Param, Body, UseGuards } from '@nestjs/common';
 import { AntrianService } from './antrian.service';
 import { Antrian, Prisma } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';

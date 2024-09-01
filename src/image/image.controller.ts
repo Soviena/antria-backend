@@ -3,11 +3,7 @@ import {
     Get,
     Header,
     Param,
-    Post,
-    Res,
     StreamableFile,
-    UploadedFile,
-    UseInterceptors,
   } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { ImageService } from './image.service';
